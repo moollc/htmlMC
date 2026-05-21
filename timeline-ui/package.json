@@ -1,0 +1,11 @@
+{
+  "name": "htmlmc",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node serve.js"
+  },
+  "dependencies": {
+    "playwright": "^1.60.0"
+  }
+}

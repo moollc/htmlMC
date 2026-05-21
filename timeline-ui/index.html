@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>htmlMC — Timeline UI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Reusable inline SVG icon definitions -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <!-- Skip to start -->
+    <symbol id="ico-reset" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/>
+    </symbol>
+    <!-- Undo -->
+    <symbol id="ico-undo" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C20.76 11.03 17.13 8 12.5 8z"/>
+    </symbol>
+    <!-- Redo -->
+    <symbol id="ico-redo" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M18.4 10.6C16.55 8.99 14.15 8 11.5 8 6.87 8 3.24 11.03 1.53 15.22l2.37.78C4.95 12.81 7.96 10.5 11.5 10.5c1.96 0 3.73.72 5.12 1.88L13 16h9V7l-3.6 3.6z"/>
+    </symbol>
+    <!-- Step back one frame -->
+    <symbol id="ico-prev" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M6 6h2v12H6zm12 12-8.5-6 8.5-6v12z"/>
+    </symbol>
+    <!-- Play -->
+    <symbol id="ico-play" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M8 5v14l11-7z"/>
+    </symbol>
+    <!-- Pause -->
+    <symbol id="ico-pause" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+    </symbol>
+    <!-- Step forward one frame -->
+    <symbol id="ico-next" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M6 18l8.5-6L6 6v12zm2-6zm8-6h2v12h-2V6z"/>
+    </symbol>
+    <!-- Skip to end -->
+    <symbol id="ico-end" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M6 18l8.5-6L6 6v12zm10-6v6h2V6h-2v6z"/>
+    </symbol>
+    <!-- Gear / settings -->
+    <symbol id="ico-settings" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M19.14 12.94c.04-.3.06-.61.06-.94s-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+    </symbol>
+    <!-- Wand / AI -->
+    <symbol id="ico-wand" viewBox="0 0 24 24" fill="currentColor">
+      <path d="m7.5 5.6 1.9-.4-.4 1.9.4 1.9-1.9-.4-1.9.4.4-1.9-.4-1.9zm12 1.9-1.9.4.4-1.9-.4-1.9 1.9.4 1.9-.4-.4 1.9.4 1.9zm-4.5-6-1.4 1.4L15 4.3l1.4-1.4-1.9-.4zM3.3 21.7l12-12-1.4-1.4-12 12 1.4 1.4zm13.1-9.2-1.4-1.4 1.9-.4.4-1.9.4 1.9 1.9.4-1.9.4-.4 1.9-.4-1.9z"/>
+    </symbol>
+    <!-- Folder / Assets -->
+    <symbol id="ico-folder" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+    </symbol>
+    <!-- Copy path -->
+    <symbol id="ico-copy" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+    </symbol>
+    <!-- Trash / Delete -->
+    <symbol id="ico-trash" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+    </symbol>
+    <!-- Audio file -->
+    <symbol id="ico-audio" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6zm-2 16a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/>
+    </symbol>
+    <!-- Generic file -->
+    <symbol id="ico-file" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/>
+    </symbol>
+    <!-- Plus / new canvas -->
+    <symbol id="ico-plus" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+    </symbol>
+    <!-- Pencil / rename -->
+    <symbol id="ico-pencil" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+    </symbol>
+    <!-- Close / delete canvas -->
+    <symbol id="ico-close" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+    </symbol>
+    <!-- Canvases stack icon -->
+    <symbol id="ico-canvases" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/>
+    </symbol>
+    <!-- Link / pooled assets -->
+    <symbol id="ico-link" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/>
+    </symbol>
+    <!-- Link-off / isolated assets -->
+    <symbol id="ico-link-off" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M17 7h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1 0 1.43-.98 2.63-2.31 2.98l1.46 1.46C20.88 15.61 22 13.93 22 12c0-2.76-2.24-5-5-5zm-1 4h-2.19l2 2H16v-2zM2 4.27l3.11 3.11A4.991 4.991 0 0 0 2 12c0 2.76 2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1 0-1.59 1.21-2.9 2.76-3.07L8.73 11H8v2h2.73l2 2H8v1.9h4.46l3.27 3.27 1.27-1.27L3.27 3 2 4.27z"/>
+    </symbol>
+    <!-- Dock / Move sidebar -->
+    <symbol id="ico-dock" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 16H5V5h7v14zm7 0h-5V5h5v14z"/>
+    </symbol>
+  </svg>
+</head>
+<body>
+
+  <div id="app">
+
+    <!-- ── Top bar ─────────────────────────────────────────── -->
+    <header id="topbar">
+      <div class="brand">htmlMC</div>
+      <div class="config-row">
+        <label>W <input id="cfg-width"  type="number" value="800"  min="1" step="1"></label>
+        <label>H <input id="cfg-height" type="number" value="450"  min="1" step="1"></label>
+        <label>FPS <input id="cfg-fps" type="number" value="30"   min="1" max="120" step="1"></label>
+        <label>Duration
+          <input id="cfg-duration" type="number" value="5" min="1" step="0.5">s
+        </label>
+      </div>
+      <button id="btn-undo" title="Undo (Ctrl+Z)" class="icon-btn">
+        <svg width="16" height="16"><use href="#ico-undo"/></svg>
+      </button>
+      <button id="btn-redo" title="Redo (Ctrl+Shift+Z)" class="icon-btn">
+        <svg width="16" height="16"><use href="#ico-redo"/></svg>
+      </button>
+      <button id="btn-canvases" title="Toggle Canvases" class="icon-btn">
+        <svg width="16" height="16"><use href="#ico-canvases"/></svg>
+      </button>
+      <button id="btn-assets" title="Workspace Assets" class="icon-btn">
+        <svg width="16" height="16"><use href="#ico-folder"/></svg>
+      </button>
+      <button id="btn-ai-sidebar" title="Toggle AI Assistant" class="icon-btn">
+        <svg width="16" height="16"><use href="#ico-wand"/></svg>
+      </button>
+      <button id="btn-settings" title="AI Settings" class="icon-btn">
+        <svg width="16" height="16"><use href="#ico-settings"/></svg>
+      </button>
+      <div id="timecode">00:00:00</div>
+    </header>
+
+    <!-- ── Canvas strip ──────────────────────────────────── -->
+    <div id="canvas-strip">
+      <button id="btn-new-canvas" title="New canvas">
+        <svg width="18" height="18"><use href="#ico-plus"/></svg>
+      </button>
+      <div id="canvas-thumbs"></div>
+    </div>
+
+    <!-- ── Stage ──────────────────────────────────────────── -->
+    <div id="stage-wrap">
+      <div id="stage-container">
+        <iframe id="stage-frame" src="about:blank" scrolling="no"></iframe>
+        <div id="stage-overlay" title="Click to seek"></div>
+      </div>
+
+      <!-- ── AI Sidebar ────────────────────────────────────── -->
+      <div id="ai-sidebar" class="dock-right collapsed">
+        <div class="ai-sidebar-header">
+          <div class="ai-sidebar-title">
+            <svg width="14" height="14" style="color: var(--accent);"><use href="#ico-wand"/></svg>
+            <span>AI Assistant</span>
+          </div>
+          <div class="ai-sidebar-header-actions">
+            <button id="btn-ai-dock" title="Toggle Dock Side" class="icon-btn-sm">
+              <svg width="12" height="12"><use href="#ico-dock"/></svg>
+            </button>
+            <button id="btn-ai-close" title="Close Panel" class="icon-btn-sm">
+              <svg width="12" height="12"><use href="#ico-close"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Scrollable chat transcript history -->
+        <div id="ai-chat-history">
+          <!-- Initial welcome message -->
+          <div class="chat-message system">
+            <div class="chat-bubble">
+              👋 Welcome to htmlMC AI! Describe changes you want to make to the active canvas composition (e.g., "make the ball bouncy", "change background to a neon gradient", "add rotation particles").
+            </div>
+          </div>
+        </div>
+
+        <!-- Prompt input region at the bottom of the sidebar -->
+        <div class="ai-sidebar-input-wrap">
+          <textarea id="ai-prompt" placeholder="Describe changes to active composition..." rows="2" spellcheck="false"></textarea>
+          <div class="ai-sidebar-input-row">
+            <div id="ai-status"></div>
+            <button id="btn-ai-generate">
+              <span>Generate</span>
+              <svg width="12" height="12"><use href="#ico-wand"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Controls ───────────────────────────────────────── -->
+    <div id="controls">
+      <button id="btn-reset" title="Go to start (Home)">
+        <svg width="16" height="16"><use href="#ico-reset"/></svg>
+      </button>
+      <button id="btn-prev" title="Previous frame (←)">
+        <svg width="16" height="16"><use href="#ico-prev"/></svg>
+      </button>
+      <button id="btn-play" title="Play / Pause (Space)">
+        <svg id="play-icon" width="18" height="18"><use href="#ico-play"/></svg>
+      </button>
+      <button id="btn-next" title="Next frame (→)">
+        <svg width="16" height="16"><use href="#ico-next"/></svg>
+      </button>
+      <button id="btn-end" title="Go to end (End)">
+        <svg width="16" height="16"><use href="#ico-end"/></svg>
+      </button>
+      <div class="spacer"></div>
+      <span id="frame-counter">0 / 0</span>
+    </div>
+
+    <!-- ── Timeline ───────────────────────────────────────── -->
+    <div id="timeline-wrap">
+      <div id="timeline-scroll">
+        <div id="timeline-inner">
+          <div id="tick-layer"></div>
+          <div id="range-bar">
+            <div id="range-fill"></div>
+            <div id="handle-in"  class="range-handle" data-handle="in"></div>
+            <div id="handle-out" class="range-handle" data-handle="out"></div>
+          </div>
+          <div id="playhead"></div>
+        </div>
+      </div>
+      <div id="zoom-controls">
+        <button id="btn-zoom-out" title="Zoom out">−</button>
+        <input  id="zoom-slider" type="range" min="0.5" max="20" step="0.1" value="2">
+        <button id="btn-zoom-in"  title="Zoom in">+</button>
+      </div>
+    </div>
+
+    <!-- ── Export bar (collapsed into controls row) ─────── -->
+    <div id="export-bar">
+      <label class="exp-label">Format
+        <select id="exp-format">
+          <option value="png_sequence">PNG Sequence</option>
+          <option value="prores">ProRes 4444</option>
+        </select>
+      </label>
+      <label class="exp-label">Range
+        <select id="exp-range">
+          <option value="full">Full</option>
+          <option value="inout">In / Out</option>
+        </select>
+      </label>
+      <button id="btn-export">Export</button>
+      <button id="btn-abort" disabled>Abort</button>
+      <div id="export-inline-progress">
+        <div id="progress-bar"></div>
+      </div>
+      <span id="progress-label"></span>
+    </div>
+
+    <!-- ── Export status overlay (shown during active export) -->
+    <div id="export-overlay" class="hidden">
+      <div id="export-overlay-inner">
+        <div id="export-log"></div>
+      </div>
+    </div>
+
+
+
+  </div>
+
+  <!-- ── AI Settings Modal ──────────────────────────────── -->
+  <div id="ai-settings-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span class="modal-title-icon">
+          <svg width="16" height="16"><use href="#ico-wand"/></svg>
+        </span>
+        <h3>AI Assistant Settings</h3>
+        <button id="btn-close-settings" class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="ai-provider">AI Provider</label>
+          <select id="ai-provider">
+            <option value="anthropic">Anthropic Claude</option>
+            <option value="gemini">Google Gemini</option>
+            <option value="openai">OpenAI GPT</option>
+            <option value="deepseek">DeepSeek</option>
+            <option value="grok">xAI Grok</option>
+            <option value="lm_studio">LM Studio (Local)</option>
+          </select>
+        </div>
+        <div class="form-group" id="group-api-key">
+          <label for="ai-key">API Key</label>
+          <input id="ai-key" type="password" placeholder="Enter API key...">
+        </div>
+        <div class="form-group">
+          <label for="ai-endpoint">API Endpoint URL</label>
+          <input id="ai-endpoint" type="text" placeholder="Default endpoint">
+        </div>
+        <div class="form-group">
+          <label for="ai-model">Model Name</label>
+          <select id="ai-model"></select>
+          <input id="ai-model-custom" type="text" placeholder="Custom model name" style="display: none; margin-top: 6px;">
+        </div>
+        <div class="modal-actions">
+          <button id="btn-save-settings" class="btn-primary">Save Settings</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Assets Drawer Modal Overlay ────────────────────── -->
+  <div id="assets-drawer" class="drawer-overlay">
+    <div class="drawer-card">
+      <div class="drawer-header">
+        <h3>
+          <svg width="14" height="14"><use href="#ico-folder"/></svg>
+          Assets
+        </h3>
+        <div class="drawer-header-actions">
+          <button id="btn-pool-toggle" class="icon-btn pool-toggle" title="Isolated — click to pool all canvases' assets">
+            <svg width="14" height="14"><use href="#ico-link-off"/></svg>
+          </button>
+          <button id="btn-close-assets" class="drawer-close">&times;</button>
+        </div>
+      </div>
+      <div class="drawer-body">
+        <div id="assets-upload-zone" class="upload-zone">
+          <p>Drag & drop assets here or click to browse</p>
+          <input type="file" id="assets-file-input" multiple style="display: none;">
+        </div>
+        <div id="assets-list" class="assets-list-container">
+          <div class="empty-state">No assets loaded. Upload SVGs, PNGs, JPEGs, or videos to use them.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="timeline.js"></script>
+</body>
+</html>
